@@ -2,7 +2,7 @@
 """
 Module: api/vi/views/cities.py
 
-Creates cities routes
+Handles all default RESTFul API actions for Cities
 """
 from flask import jsonify, abort, request, make_response
 from models.state import State
