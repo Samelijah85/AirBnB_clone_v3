@@ -2,7 +2,7 @@
 """
 Module: api/vi/views/cities.py
 
-Creates cities routes
+Handles all default RESTFul API actions for Cities
 """
 from flask import jsonify, abort, request, make_response
 from models.state import State
@@ -64,10 +64,10 @@ def create_city(state_id):
     data = request.get_json()
     if 'name' not in data:
         abort(400, "Missing name")
-    city = City(**data)
-    city.state_id = state_id
-    city.save()
-    return make_response(jsonify(city.to_dict()), 201)
+    new_city = City(**data)
+    new_city.state_id = state_id
+    new_city.save()
+    return make_response(jsonify(new_city.to_dict()), 201)
 
 
 @app_views.route('/cities/<city_id>', methods=['PUT'], strict_slashes=False)
@@ -79,10 +79,10 @@ def update_city(city_id):
     if not request.json:
         abort(400, "Not a JSON")
 
-    attributes = ['id', 'created_at', 'updated_at', 'state_id']
+    ignored_keys = ['id', 'created_at', 'updated_at', 'state_id']
     data = request.get_json()
     for key, value in data.items():
-        if key not in attributes:
+        if key not in ignored_keys:
             setattr(city, key, value)
     city.save()
     return make_response(jsonify(city.to_dict()), 200)
