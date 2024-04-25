@@ -79,10 +79,10 @@ def update_city(city_id):
     if not request.json:
         abort(400, "Not a JSON")
 
-    attributes = ['id', 'created_at', 'updated_at', 'state_id']
+    ignored_keys = ['id', 'created_at', 'updated_at', 'state_id']
     data = request.get_json()
     for key, value in data.items():
-        if key not in attributes:
+        if key not in ignored_keys:
             setattr(city, key, value)
     city.save()
     return make_response(jsonify(city.to_dict()), 200)
