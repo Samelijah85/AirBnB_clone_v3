@@ -70,13 +70,17 @@ class FileStorage:
 
     def get(self, cls, id):
         """Retrieve one object"""
-        objs = self.all(cls)
-        key = "{}.{}".format(cls.__name__, id)
-        return objs.get(key, None)
+        if cls is not None:
+            obj = self.__objects.get(cls.__name__ + '.' + id)
+            return (obj)
+        return None
 
     def count(self, cls=None):
         """Count number of objects in storage"""
-        if cls:
-            return len([obj for obj in self.__objects.values() if type(obj) == cls])
-        else:
-            return len(self.__objects)
+        if cls is not None:
+            new_dict = {}
+            for key, value in self.__objects.items():
+                if cls == value.__class__ or cls == value.__class__.__name__:
+                    new_dict[key] = value
+            return len(new_dict)
+        return len(self.__objects)
