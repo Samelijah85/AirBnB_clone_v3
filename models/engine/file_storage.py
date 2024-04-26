@@ -73,8 +73,8 @@ class FileStorage:
         """Retrieve one object"""
         if cls and id:
             if cls in classes.values():
-                objs = self.all(cls)
-                for obj in objs.values():
+                all_objects = self.all(cls)
+                for obj in all_objects.values():
                     if obj.id == id:
                         return obj
         return None
