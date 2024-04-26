@@ -7,6 +7,7 @@ from models.base_model import BaseModel
 from models.state import State
 from os import getenv
 
+
 @unittest.skipIf(getenv('HBNB_TYPE_STORAGE') == 'db', "FileStorage not in use")
 class TestFileStorageMethods(unittest.TestCase):
     """Test cases for FileStorage methods"""
@@ -35,7 +36,6 @@ class TestFileStorageMethods(unittest.TestCase):
         """Test count method with no class argument"""
         count_before = len(self.file_storage.all())
 
-
         state1 = State(name="New York")
         state1.save()
         state2 = State(name="Texas")
@@ -58,6 +58,7 @@ class TestFileStorageMethods(unittest.TestCase):
         state_count_after = len(self.file_storage.all(State))
 
         self.assertEqual(state_count_after, state_count_before + 2)
+
 
 if __name__ == '__main__':
     unittest.main()

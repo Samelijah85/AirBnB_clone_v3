@@ -7,6 +7,7 @@ from models.base_model import BaseModel
 from models.state import State
 from os import getenv
 
+
 @unittest.skipIf(getenv('HBNB_TYPE_STORAGE') != 'db', "DBStorage not in use")
 class TestDBStorageMethods(unittest.TestCase):
     """Test cases for DBStorage methods"""
@@ -56,6 +57,7 @@ class TestDBStorageMethods(unittest.TestCase):
         state_count_after = self.db.count(State)
 
         self.assertEqual(state_count_after, state_count_before + 2)
+
 
 if __name__ == '__main__':
     unittest.main()
