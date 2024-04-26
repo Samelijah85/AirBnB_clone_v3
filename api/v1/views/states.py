@@ -34,7 +34,7 @@ def delete_state(state_id):
     if state:
         storage.delete(state)
         storage.save()
-        return jsonify({})
+        return jsonify({}), 200
     else:
         abort(404)
 
@@ -56,14 +56,13 @@ def create_state():
 def update_state(state_id):
     """Update a specific State object by ID."""
     state = storage.get(State, state_id)
-    if state:
-        data = request.get_json()
-        if not data:
-            abort(400, 'Not a JSON')
-        for key, value in data.items():
-            if key not in ['id', 'created_at', 'updated_at']:
-                setattr(state, key, value)
-        state.save()
-        return jsonify(state.to_dict())
-    else:
+    if not state:
         abort(404)
+    if not request.json:
+        abort(400, 'Not a JSON')
+    data = request.get_json()
+    for key, value in data.items():
+        if key not in ['id', 'created_at', 'updated_at']:
+            setattr(state, key, value)
+    state.save()
+    return jsonify(state.to_dict()), 200
