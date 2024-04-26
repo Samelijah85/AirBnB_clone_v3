@@ -84,7 +84,7 @@ class DBStorage:
                     ).filter_by(id=id).first()
                 return (obj)
         return None
-    
+
     def count(self, cls=None):
         """Count number of objects in storage"""
         new_dict = {}
