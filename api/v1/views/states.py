@@ -17,10 +17,9 @@ def get_states():
 def get_state(state_id):
     """Retrieve a specific State object by ID."""
     state = storage.get(State, state_id)
-    if state:
-        return jsonify(state.to_dict())
-    else:
-        abort(404)
+    if not state:
+        return abort(404)
+    return jsonify(state.to_dict())
 
 
 @app_views.route(
@@ -56,14 +55,13 @@ def create_state():
 def update_state(state_id):
     """Update a specific State object by ID."""
     state = storage.get(State, state_id)
-    if state:
-        data = request.get_json()
-        if not data:
-            abort(400, 'Not a JSON')
-        for key, value in data.items():
-            if key not in ['id', 'created_at', 'updated_at']:
-                setattr(state, key, value)
-        state.save()
-        return jsonify(state.to_dict())
-    else:
-        abort(404)
+    if not state:
+        return abort(404)
+    data = request.get_json()
+    if not data:
+        abort(400, 'Not a JSON')
+    for key, value in data.items():
+        if key not in ['id', 'created_at', 'updated_at']:
+            setattr(state, key, value)
+    state.save()
+    return jsonify(state.to_dict())
