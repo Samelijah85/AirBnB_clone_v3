@@ -76,9 +76,13 @@ class DBStorage:
         self.__session.remove()
 
     def get(self, cls, id):
-        """ Retrieves one object """
+        """Retrieves one object"""
         if cls and id:
-            return self.__session.query(cls).get(id)
+            if cls in classes.values() and isinstance(id, str):
+                objs = self.all(cls)
+                for key, value in objs.items():
+                    if key.split('.')[1] == id:
+                        return value
         return None
 
     def count(self, cls=None):
