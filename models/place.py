@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 """ holds class Place"""
 import models
 from models.base_model import BaseModel, Base
@@ -33,10 +33,10 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        reviews = relationship("Review", backref="place", cascade="delete")
+        reviews = relationship("Review", backref="place")
         amenities = relationship("Amenity", secondary="place_amenity",
                                  backref="place_amenities",
-                                 viewonly=False, cascade="all, delete")
+                                 viewonly=False)
     else:
         city_id = ""
         user_id = ""
