@@ -21,7 +21,6 @@ else:
 
 class BaseModel:
     """The BaseModel class from which future classes will be derived"""
-
     if models.storage_t == "db":
         id = Column(String(60), primary_key=True)
         created_at = Column(DateTime, default=datetime.utcnow)
@@ -50,16 +49,17 @@ class BaseModel:
 
     def __str__(self):
         """String representation of the BaseModel class"""
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return "[{:s}] ({:s}) {}".format(self.__class__.__name__, self.id,
+                                         self.__dict__)
 
     def save(self):
-        """Updates the attribute 'updated_at' with the current datetime"""
+        """updates the attribute 'updated_at' with the current datetime"""
         self.updated_at = datetime.utcnow()
         models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
-        """Returns a dictionary containing all keys/values of the instance"""
+        """returns a dictionary containing all keys/values of the instance"""
         new_dict = self.__dict__.copy()
         if "created_at" in new_dict:
             new_dict["created_at"] = new_dict["created_at"].strftime(time)
@@ -71,5 +71,5 @@ class BaseModel:
         return new_dict
 
     def delete(self):
-        """Delete the current instance from the storage"""
+        """delete the current instance from the storage"""
         models.storage.delete(self)
