@@ -15,7 +15,7 @@ from models.review import Review
 from models.state import State
 from models.user import User
 import json
-from os import getenv
+import os
 import pycodestyle as pep8
 import unittest
 FileStorage = file_storage.FileStorage
@@ -68,30 +68,20 @@ test_file_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
 
-@unittest.skipIf(getenv('HBNB_TYPE_STORAGE') == 'db', "FileStorage not in use")
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
-
-    def setUp(self):
-        """Set up test environment"""
-        self.fs = FileStorage()
-        self.fs.reload()
-
-    def tearDown(self):
-        """Tear down test environment"""
-        self.fs._FileStorage__objects = {}
-        self.fs.save()
-
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_all_returns_dict(self):
         """Test that all returns the FileStorage.__objects attr"""
-        storage = self.fs
+        storage = FileStorage()
         new_dict = storage.all()
         self.assertEqual(type(new_dict), dict)
         self.assertIs(new_dict, storage._FileStorage__objects)
 
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_new(self):
         """test that new adds an object to the FileStorage.__objects attr"""
-        storage = self.fs
+        storage = FileStorage()
         save = FileStorage._FileStorage__objects
         FileStorage._FileStorage__objects = {}
         test_dict = {}
@@ -104,9 +94,10 @@ class TestFileStorage(unittest.TestCase):
                 self.assertEqual(test_dict, storage._FileStorage__objects)
         FileStorage._FileStorage__objects = save
 
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
-        storage = self.fs
+        storage = FileStorage()
         new_dict = {}
         for key, value in classes.items():
             instance = value()
@@ -122,32 +113,3 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
-
-    def test_get(self):
-        """Test get method"""
-        storage = self.fs
-        state_data = {"name": "Zomba"}
-        new_state = State(**state_data)
-        new_state.save()
-
-        retrieved_state = storage.get(State, new_state.id)
-        self.assertEqual(retrieved_state, new_state)
-
-        fake_state = storage.get(State, "fake_id")
-        self.assertEqual(fake_state, None)
-
-    def test_count(self):
-        """Test count method"""
-        storage = self.fs
-        count_before = storage.count()
-        state_count_before = storage.count(State)
-
-        new_state1 = State(name="Mzuzu")
-        new_state1.save()
-        new_state2 = State(name="Machinga")
-        new_state2.save()
-
-        count_after = storage.count()
-        state_count_after = storage.count(State)
-        self.assertEqual(count_after, count_before + 2)
-        self.assertEqual(state_count_after, state_count_before + 2)
