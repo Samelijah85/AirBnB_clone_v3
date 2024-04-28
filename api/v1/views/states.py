@@ -4,8 +4,8 @@ Module: api/vi/views/states.py
 
 API endpoints for State objects.
 """
+from flask import abort, jsonify, make_response, request
 from api.v1.views import app_views
-from flask import jsonify, request, abort, make_response
 from models import storage
 from models.state import State
 

@@ -4,11 +4,11 @@ Module: api/vi/views/states.py
 
 API endpoints for City objects.
 """
+from flask import abort, jsonify, make_response, request
+from api.v1.views import app_views
+from models import storage
 from models.city import City
 from models.state import State
-from models import storage
-from api.v1.views import app_views
-from flask import abort, jsonify, make_response, request
 
 
 @app_views.route('/states/<state_id>/cities', methods=['GET'],
@@ -22,7 +22,7 @@ def get_cities(state_id):
     return jsonify(cities)
 
 
-@app_views.route('/cities/<city_id>/', methods=['GET'], strict_slashes=False)
+@app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
 def get_city(city_id):
     """Retrieves a specific city based on id"""
     city = storage.get(City, city_id)

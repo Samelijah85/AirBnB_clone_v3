@@ -71,10 +71,12 @@ class FileStorage:
 
     def get(self, cls, id):
         """Retrieve one object"""
-        if cls and id:
-            key = "{}.{}".format(cls.__name__, id)
-            return self.__objects.get(key)
-        return
+        if cls in classes.values() and id and isinstance(id, str):
+            objs = self.all(cls)
+            for key, value in objs.items():
+                if key.split(".")[1] == id:
+                    return value
+        return None
 
     def count(self, cls=None):
         """Count number of objects in storage"""
