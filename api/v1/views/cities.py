@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Module: api/vi/views/states.py
+Module: api/vi/views/cities.py
 
 API endpoints for City objects.
 """
