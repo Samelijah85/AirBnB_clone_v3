@@ -34,21 +34,18 @@ def get_place_amenities(place_id):
 def delete_place_amenity(place_id, amenity_id):
     """Deletes a Amenity object to a Place"""
     place = storage.get(Place, place_id)
-    if not place:
-        abort(404)
     amenity = storage.get(Amenity, amenity_id)
-    if not amenity:
+    if place is None or amenity is None:
         abort(404)
-    if storage_t == "db":
-        if amenity not in place.ammenities:
-            abort(404)
-        place.amenities.remove(amenity)
-    else:
-        if amenity_id not in place.amenity_ids:
-            abort(404)
-        place.amenity_ids.remove(amenity_id)
-    storage.save()
-    return jsonify({})
+
+    for place_amenity in place.amenities:
+        if place_amenity.id == amenity.id:
+            if storage_t == 'db':
+                place.amenities.remove(amenity)
+            else:
+                place.amenity_ids.remove(amenity)
+            storage.save()
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>', methods=['POST'],
@@ -56,10 +53,8 @@ def delete_place_amenity(place_id, amenity_id):
 def link_amenity(place_id, amenity_id):
     """Link a Amenity object to a Place"""
     place = storage.get(Place, place_id)
-    if not place:
-        abort(404)
     amenity = storage.get(Amenity, amenity_id)
-    if not amenity:
+    if place is None or amenity is None:
         abort(404)
     if storage_t == "db":
         if amenity in place.ammenities:
@@ -69,6 +64,5 @@ def link_amenity(place_id, amenity_id):
         if amenity_id in place.amenity_ids:
             return jsonify(amenity.to_dict())
         place.amenity_ids.append(amenity_id)
-
     storage.save()
     return make_response(jsonify(amenity.to_dict()), 201)
